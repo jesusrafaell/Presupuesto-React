@@ -18,20 +18,18 @@ function App() {
   //UseEffect actualiza el restante
   useEffect(() => {
     if(createGasto) {
-
       //add new presupuesto
       saveGastos([
         ...gastos,
         gasto
-      ])
+      ]);
+      //Left presupuesto actual
+      const presupuestoRestante = restante - gasto.cantidad;
+      saveRestante(presupuestoRestante);
+      
+      //Resetear a false
+      saveCreateGasto(false);
     } 
-   
-    //Left presupuesto actual
-    const presupuestoRestante = restante - gasto.cantidad;
-    saveRestante(presupuestoRestante);
-
-    //Resetear a false
-    saveCreateGasto(false);
   }, [gasto, createGasto, gastos, restante]);
 
 
@@ -52,6 +50,7 @@ function App() {
                 <Formulario 
                   saveGasto={saveGasto}
                   saveCreateGasto={saveCreateGasto}
+                  restante={restante}
                 />
               </div>
 

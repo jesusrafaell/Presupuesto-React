@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import Error from './Error';
 import shortid from 'shortid';
 
-const Formulario = ({saveGasto, saveCreateGasto}) => {
+const Formulario = ({saveGasto, saveCreateGasto, restante}) => {
     
     const [name, saveName] = useState('');
     const [cantidad, saveCantidad] = useState(0);
     const [error, saveError] = useState(false);
+    const [errorRestante, saveErrorRestante] = useState(false);
 
     //Cuando el usuario agrega un gasto
     const addGasto = e => {
@@ -16,8 +17,17 @@ const Formulario = ({saveGasto, saveCreateGasto}) => {
         //validar gasto
         if(cantidad < 1 || isNaN(cantidad) || name.trim() === '') {
             saveError(true);
+            saveErrorRestante(false);
             return; 
         }
+        if(cantidad > restante){
+            saveErrorRestante(true);
+            saveError(false);
+            return;
+        }
+
+        saveError(false);
+        saveErrorRestante(false);
 
         //construir el gasto
         const gasto = {
@@ -40,6 +50,7 @@ const Formulario = ({saveGasto, saveCreateGasto}) => {
         >
             <h2>Agrega tus gastos aqui</h2>
             {error ? <Error mensaje="Ambos campos son obligatorios o Presupuesto Incorrecto" /> : null}
+            {errorRestante ? <Error mensaje="Se excede del presupuesto" /> : null}
             <div className="campo">
                 <label>Nombre Gasto</label>
                 <input
@@ -51,7 +62,7 @@ const Formulario = ({saveGasto, saveCreateGasto}) => {
                />
             </div>
             <div className="campo">
-                <label>Cantidad Gasti</label>
+                <label>Cantidad Gasto</label>
                 <input
                     type="number"
                     className="u-full-width"
